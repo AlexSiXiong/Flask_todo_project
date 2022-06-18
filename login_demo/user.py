@@ -1,5 +1,9 @@
 import sqlite3
+
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+
+from werkzeug.security import safe_str_cmp
 
 
 class User():
@@ -74,3 +78,38 @@ class UserRegister(Resource):
         connection.close()
 
         return {"message": "User created successfully."}, 201
+
+class UserLogin(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('username',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+    parser.add_argument('password',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+
+    @classmethod
+    def post(self):
+        # get data from parser
+        data = UserLogin.parser.parse_args()
+        # find user in database
+        user = User.find_by_username(data['username'])
+        
+        if not user:
+            return {"message": "User with that username already exists."}, 400
+
+        # check pwd
+        if user and safe_str_cmp(user.password, data['password']):
+            access_token = create_access_token(identity=user.id, fresh=True)
+            # this is for in logout
+            refresh_token = create_refresh_token(user.id)
+            return {
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }
+        return {'message': 'Invalid credentials'}, 401
+        
