@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 
 # uvicorn fastapi_start:app --reload
 
@@ -41,4 +41,10 @@ async def update_dish(country_name, dish_name):
 async def delete_dish(country_name):
     del DISHES[country_name]
     return {"msg": "a country's dish removed."}
-    
+
+@app.post("/user/login")
+async def user_login(username=Form(), password=Form()):
+    return {
+        "username": username,
+        "password": password
+    }
