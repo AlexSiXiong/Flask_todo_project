@@ -6,14 +6,12 @@ def examine(db_name):
 
     cursor = connection.cursor()
 
-    sql_script = "select * from {}".format(db_name)
-    # sql_script = "delete from {} where id = 5".format(db_name)
-    cursor.execute(sql_script)
-
-    for i in cursor:
-        print(i)
+    sql_script = "select password, id from {} where name='{}'".format(db_name, 'bbd')
+    res = cursor.execute(sql_script)
+    save_password = res.fetchone()
+    print(save_password)
+    connection.close()
     
-    connection.commit()
     connection.close()
 
 def make_args():

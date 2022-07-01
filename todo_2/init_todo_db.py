@@ -39,14 +39,15 @@ foreign key(owner) references user(id) on delete cascade on update cascade
 cursor.execute(create_table)
 
 sql = "INSERT INTO todo (item, description,priority,owner) VALUES (?, ?, ?, ?)"
-val = ("Eat", "Eat a burger", "1", 1)
+val = ("Eat", "Eat 2 burger", "1", 1)
 cursor.execute(sql, val)
 
 sql = "INSERT INTO todo (item, description,priority,owner) VALUES (?, ?, ?, ?)"
-val = ("Workout", "20 push ups", "2", 2)
+val = ("Workout", "200 push ups", "2", 2)
+cursor.execute(sql, val)
 
 sql = "INSERT INTO todo (item, description,priority,owner) VALUES (?, ?, ?, ?)"
-val = ("Sleep", "1 hour sleep", "3", 1)
+val = ("Sleep", "3 hour sleep", "3", 1)
 cursor.execute(sql, val)
 
 connection.commit()
